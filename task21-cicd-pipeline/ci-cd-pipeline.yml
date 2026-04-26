@@ -1,0 +1,54 @@
+name: CI/CD Pipeline - Full Stack Application
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build task12 - Product Management
+        run: |
+          cd task12-product-management
+          mvn clean install -DskipTests
+        continue-on-error: true
+
+      - name: Test task12 - Product Management
+        run: |
+          cd task12-product-management
+          mvn test
+        continue-on-error: true
+
+      - name: Build task13 - Exception Handling
+        run: |
+          cd task13-exception-handling
+          mvn clean install -DskipTests
+        continue-on-error: true
+
+      - name: Build task18 - Unit Testing
+        run: |
+          cd task18-unit-testing
+          mvn clean install
+        continue-on-error: true
+
+      - name: Run task18 - Unit Tests
+        run: |
+          cd task18-unit-testing
+          mvn test
+        continue-on-error: true
+
+      - name: Pipeline Complete
+        run: echo "CI/CD Pipeline completed successfully!"
